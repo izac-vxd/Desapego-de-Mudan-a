@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo Desapego da Mudança | Itupeva-SP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { DEFAULT: '#1b4332', light: '#2d6a4f', accent: '#d97706', dark: '#112a1f', } } } } }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    .dark ::-webkit-scrollbar-track { background: #17211b; }
+    ::-webkit-scrollbar-thumb { background: #2d6a4f; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-zinc-950 text-gray-800 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-200">
+
+  <header class="bg-gradient-to-r from-brand-dark via-brand to-brand-light text-white shadow-lg sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="text-center md:text-left">
+          <div class="inline-flex items-center gap-2 bg-white/10 text-amber-300 text-xs px-3 py-1 rounded-full font-semibold mb-2">
+            <i class="fa-solid fa-location-dot"></i> Itupeva – SP
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Desapego da Mudança ♻️</h1>
+          <p class="text-gray-200 text-sm sm:text-base mt-1">Achadinhos e móveis bem conservados esperando uma nova casa!</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="themeToggle" class="p-3 rounded-xl bg-white/10 hover:bg-white/20 text-amber-300 transition-all" title="Alternar Modo Claro/Escuro">
+            <i class="fa-solid fa-moon text-lg" id="themeIcon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <div class="mb-8 space-y-4">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="relative w-full md:w-80">
+          <input type="text" id="searchInput" placeholder="Pesquisar produto..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition-all shadow-sm">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-sm"></i>
+        </div>
+        <div class="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 flex items-center gap-2">
+          <span>Mostrando <strong id="itemsCount" class="text-emerald-600 dark:text-emerald-400">0</strong> produtos</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="categoryContainer"></div>
+    </div>
+
+    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+  </main>
+
+  <footer class="bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-800 mt-12 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-gray-500 dark:text-gray-400 space-y-2">
+      <p class="font-semibold text-gray-700 dark:text-gray-200">Desapego da Mudança • Itupeva / SP</p>
+      <p class="text-xs">Dúvidas e agendamento de retiradas pelo WhatsApp: <span class="text-emerald-600 dark:text-emerald-400 font-semibold">(11) 99019-6759</span></p>
+    </div>
+  </footer>
+
+  <script>
+    const productsData = [
+      { id: 1, title: "Baú Tork Smart Box + Suporte Metálico", price: 60.00, category: "Moto", desc: "Baú preto usado, em bom funcionamento, com marcas de uso e pontos de oxidação no suporte metálico. Compatibilidade universal." },
+      { id: 2, title: "Moedor de Café Philco Grano Aroma", price: 60.00, category: "Eletro", desc: "Moedor de café em acabamento inox e preto, com tampa transparente. Funcionando normalmente." },
+      { id: 3, title: "Rack para TV com Rodízios", price: 150.00, category: "Móveis", desc: "Móvel marrom-escuro com nichos abertos, compartimento/gavetão inferior e rodízios. Medidas: 89 cm (Largura) × 50 cm (Profundidade)." },
+      { id: 4, title: "Sofá de 4 Lugares", price: 480.00, category: "Móveis", desc: "Sofá preto com almofadas estampadas em preto e branco e pés metálicos. Bom estado geral de conservação." },
+      { id: 5, title: "Nicho de Parede Branco", price: 30.00, category: "Móveis", desc: "Nicho compacto de parede em MDF branco, acabamento brilhante e compartimento aberto. Em ótimo estado." },
+      { id: 6, title: "Mesa de Escritório com Estante", price: 200.00, category: "Móveis", desc: "Móvel integrado de escritório/estudo. Medidas: 1,30 m (Largura) × 45 cm (Profundidade) × 1,50 m (Altura)." },
+      { id: 7, title: "Cadeira de Escritório Preta", price: 150.00, category: "Móveis", desc: "Cadeira giratória de escritório com braços, encosto alto, base metálica prateada e rodízios. Marcas leves de uso." },
+      { id: 8, title: "Motor de Portão Basculante PPA", price: 450.00, category: "Automação", desc: "Kit completo com trilho de alumínio, central PPA Agility P31048, protetor Clamper Gate IP66 e controle PPA ZAP. Testado e funcional." },
+      { id: 9, title: "Gaveteiro Volante de 3 Gavetas", price: 180.00, category: "Móveis", desc: "Gaveteiro volante na cor bege/cinza-claro com rodízios. Usado em ótimo estado; gavetas correndo perfeitamente." },
+      { id: 10, title: "Caixa Fercar com +50 Ferramentas", price: 120.00, category: "Ferramentas", desc: "Conjunto completo de ferramentas manuais variadas (chaves, alicates, soquetes). 100% funcionais." },
+      { id: 11, title: "Bagageiro para Moto Scam", price: 160.00, category: "Moto", desc: "Suporte traseiro em liga leve de alumínio durável, cor prata/cinza. Ótimo estado de conservação." },
+      { id: 12, title: "Jogo com 4 Lentes de Pisca", price: 10.00, category: "Moto", desc: "Quatro lentes acrílicas na cor âmbar/laranja para piscas de motocicleta. Usadas em bom estado." },
+      { id: 13, title: "Kit com 6 Portas de Armário em Mogno", price: 250.00, category: "Móveis", desc: "São 6 portas de armário em acabamento mogno com brilho. Cada porta mede 1,68 m × 0,41 m. Acompanham puxadores e dobradiças." },
+      { id: 14, title: "Máscara Respiratória 3M Série 6000", price: 80.00, category: "EPI", desc: "Respirador semi-facial reutilizável acompanhado de par de cartuchos 3M 6003 e pré-filtros/retentores." },
+      { id: 15, title: "Torquímetro de Vareta Waft 1/2\"", price: 50.00, category: "Ferramentas", desc: "Torquímetro de ponteiro com encaixe quadrado de 1/2\" e cabo anatômico. Excelente estado de conservação." },
+      { id: 16, title: "Kit com 4 Livros (Clássicos e HQs)", price: 55.00, category: "Livros", desc: "Inclui: Fábulas (Monteiro Lobato), Os 12 Trabalhos de Hércules em Quadrinhos, O Pequeno Príncipe e Luluzinha." },
+      { id: 17, title: "Sapato", price: 130.00, category: "Calçados", desc: "Sapato em excelente estado de conservação, confortável e ideal para o dia a dia ou ocasiões especiais." },
+      { id: 18, title: "Vestido", price: 90.00, category: "Vestuário", desc: "Vestido elegante, pouco usado e em perfeito estado de conservação." },
+      { id: 19, title: "Espelho de Parede Orgânico", price: 60.00, category: "Decoração", desc: "Espelho de parede com design orgânico e formato assimétrico fluído (50x65 cm). Possui detalhe decorativo no canto inferior. Em bom estado de conservação." },
+      { id: 20, title: "Kit com 3 Quadros Decorativos", price: 350.00, category: "Decoração", desc: "Lote com 3 quadros: Pintura Marítima Clássica, Quadro Fundo do Mar (Golfinho) e Painel Abstrato Tríptico. Excelente oportunidade!" }
+    ];
+
+    const WHATSAPP_PHONE = "5511990196759";
+    let activeCategory = "Todos";
+    let searchQuery = "";
+
+    function renderCategories() {
+      const categories = ["Todos", ...new Set(productsData.map(p => p.category))];
+      const container = document.getElementById("categoryContainer");
+      container.innerHTML = "";
+      categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = `px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
+          activeCategory === cat ? "bg-emerald-600 text-white shadow-md" : "bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-zinc-800"
+        }`;
+        btn.innerText = cat;
+        btn.onclick = () => { activeCategory = cat; renderCategories(); renderProducts(); };
+        container.appendChild(btn);
+      });
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById("productsGrid");
+      grid.innerHTML = "";
+
+      const filtered = productsData.filter(p => {
+        const matchesCategory = activeCategory === "Todos" || p.category === activeCategory;
+        const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.desc.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+
+      document.getElementById("itemsCount").innerText = filtered.length;
+
+      filtered.forEach(p => {
+        const card = document.createElement("article");
+        card.className = "bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm flex flex-col group";
+        const waMessage = encodeURIComponent(`Olá! Tenho interesse no Produto ${p.id}: ${p.title} (R$ ${p.price.toFixed(2).replace('.', ',')})`);
+        const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${waMessage}`;
+
+        card.innerHTML = `
+          <div class="relative h-52 bg-gray-100 dark:bg-zinc-800 overflow-hidden flex items-center justify-center">
+            <img src="item${p.id}.jpg" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Foto+Indisponível'">
+            <span class="absolute top-3 right-3 bg-amber-500 text-black text-[10px] font-black px-2 py-1 rounded-md shadow">ITEM ${String(p.id).padStart(2, '0')}</span>
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div>
+              <h3 class="font-bold text-gray-900 dark:text-white text-base leading-snug">${p.title}</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 line-clamp-3 leading-relaxed">${p.desc}</p>
+            </div>
+            <div class="pt-2 border-t border-gray-100 dark:border-zinc-800/80 space-y-3">
+              <div class="flex items-baseline justify-between">
+                <span class="text-xs text-gray-400 uppercase font-semibold">Valor</span>
+                <span class="text-xl font-black text-emerald-600 dark:text-emerald-400">R$ ${p.price.toFixed(2).replace('.', ',')}</span>
+              </div>
+              <a href="${waUrl}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm text-center transition-all flex items-center justify-center gap-2 shadow-md">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Tenho Interesse
+              </a>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", (e) => { searchQuery = e.target.value; renderProducts(); });
+    const themeToggleBtn = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+
+    themeToggleBtn.addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+      themeIcon.className = document.documentElement.classList.contains("dark") ? "fa-solid fa-sun text-lg" : "fa-solid fa-moon text-lg";
+    });
+
+    window.onload = () => { renderCategories(); renderProducts(); };
+  </script>
+</body>
+</html>
